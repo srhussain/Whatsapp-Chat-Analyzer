@@ -12,16 +12,21 @@ def preprocess(data):
         dates=re.findall(pattern1,data)
     else:
         dates=re.findall(pattern2,data)
+
+    # Remove \u202f spaces from time stamp
+    dates
+    normalized_dates = [date.replace("\u202f", " ") for date in dates]
+    dates=normalized_dates[:]
     
     #check which one have data
     if messages1:
         df=pd.DataFrame({'user_message':messages1,'message_date':dates})
-        # conert nessage date type
+        # convert nessage date type
         df['message_date']=pd.to_datetime(df['message_date'],format = '%m/%d/%y, %H:%M - ')
     else:
         df=pd.DataFrame({'user_message':messages2,'message_date':dates})
         # conert nessage date type
-        df['message_date']=pd.to_datetime(df['message_date'],format = '%d/%m/%Y, %I:%M %p - ')
+        df['message_date']=pd.to_datetime(df['message_date'],format = '%m/%d/%y, %I:%M %p - ')
     
     df.rename(columns={'message_date':'date'},inplace=True)
     users=[]
