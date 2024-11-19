@@ -2,12 +2,27 @@ import re
 import pandas as pd
 
 def preprocess(data):
-    pattern=r'\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{1,2}\s-\s'
-    messages=re.split(pattern,data)[1:]
-    dates=re.findall(pattern,data)
-    df=pd.DataFrame({'user_message':messages,'message_date':dates})
-    # conert nessage date type
-    df['message_date']=pd.to_datetime(df['message_date'],format='%m/%d/%y, %H:%M - ')
+    # For 24 Hour Data
+    pattern1=r'\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{1,2}\s-\s'
+    # For 12 Hour Data
+    pattern2 = pattern = r'\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{1,2}\s(?:AM|PM|am|pm)?\s-\s'
+    messages1=re.split(pattern1,data)[1:]
+    messages2=re.split(pattern2,data)[1:]
+    if messages1:
+        dates=re.findall(pattern1,data)
+    else:
+        dates=re.findall(pattern2,data)
+    
+    #check which one have data
+    if messages1:
+        df=pd.DataFrame({'user_message':messages1,'message_date':dates})
+        # conert nessage date type
+        df['message_date']=pd.to_datetime(df['message_date'],format = '%m/%d/%y, %H:%M - ')
+    else:
+        df=pd.DataFrame({'user_message':messages2,'message_date':dates})
+        # conert nessage date type
+        df['message_date']=pd.to_datetime(df['message_date'],format = '%d/%m/%Y, %I:%M %p - ')
+    
     df.rename(columns={'message_date':'date'},inplace=True)
     users=[]
     messages=[]
