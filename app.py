@@ -9,7 +9,7 @@ from matplotlib import rcParams
 
 from matplotlib import rcParams
 importlib.reload(helper)
-rcParams['font.family'] = 'Noto Emoji'
+# rcParams['font.family'] = 'Noto Emoji'
 
 st.sidebar.title("Whatsapp chat analysis")
 
